@@ -15,6 +15,11 @@ class Inspection extends Model
         'active',
     ];
 
+    protected $casts = [
+        'date' => 'datetime',
+    ];
+
+
     public function university()
     {
         return $this->belongsTo(University::class);
@@ -25,8 +30,20 @@ class Inspection extends Model
         return $this->belongsTo(User::class, 'inspector_id');
     }
 
+
+
+    public function inspectors()
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'inspection_user', 'inspection_id', 'user_id');
+    }
+
     public function reports()
     {
-        return $this->hasMany(InspectionReport::class);
+        return $this->hasMany(\App\Models\InspectionReport::class, 'inspection_id');
+    }
+
+    public function latestReport()
+    {
+        return $this->hasOne(\App\Models\InspectionReport::class, 'inspection_id')->latestOfMany();
     }
 }

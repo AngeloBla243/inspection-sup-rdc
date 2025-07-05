@@ -63,4 +63,14 @@ class User extends Authenticatable
             ? asset('storage/' . $this->profile_picture)
             : asset('images/default-avatar.png'); // chemin vers une image par défaut
     }
+
+    // public function inspections()
+    // {
+    //     return $this->hasMany(\App\Models\Inspection::class, 'inspector_id');
+    // }
+
+    public function inspections()
+    {
+        return $this->belongsToMany(\App\Models\Inspection::class, 'inspection_user', 'user_id', 'inspection_id');
+    }
 }

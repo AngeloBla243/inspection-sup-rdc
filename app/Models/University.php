@@ -15,6 +15,7 @@ class University extends Model
         'gps_latitude',
         'gps_longitude',
         'inspection_status',
+        'logo'
     ];
 
     public function professors()

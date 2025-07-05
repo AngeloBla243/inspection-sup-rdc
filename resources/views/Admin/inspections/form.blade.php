@@ -15,17 +15,16 @@
 </div>
 
 <div class="form-group">
-    <label for="inspector_id">Inspecteur</label>
-    <select name="inspector_id" id="inspector_id" class="form-control" required>
-        <option value="">-- Sélectionnez un inspecteur --</option>
+    <label for="inspectors">Inspecteurs</label>
+    <select name="inspectors[]" id="inspectors" class="form-control select2" multiple required>
         @foreach ($inspectors as $inspector)
             <option value="{{ $inspector->id }}"
-                {{ old('inspector_id', $inspection->inspector_id ?? '') == $inspector->id ? 'selected' : '' }}>
+                {{ in_array($inspector->id, old('inspectors', isset($inspection) ? $inspection->inspectors->pluck('id')->toArray() : [])) ? 'selected' : '' }}>
                 {{ $inspector->name }}
             </option>
         @endforeach
     </select>
-    @error('inspector_id')
+    @error('inspectors')
         <div class="text-danger">{{ $message }}</div>
     @enderror
 </div>
@@ -33,7 +32,8 @@
 <div class="form-group">
     <label for="date">Date</label>
     <input type="date" name="date" id="date" class="form-control"
-        value="{{ old('date', isset($inspection) ? $inspection->date->format('Y-m-d') : '') }}" required>
+        value="{{ old('date', isset($inspection) && $inspection->date ? $inspection->date->format('Y-m-d') : '') }}"
+        required>
     @error('date')
         <div class="text-danger">{{ $message }}</div>
     @enderror

@@ -124,13 +124,12 @@
                             <p>Rapports d'inspection</p>
                         </a>
                     </li>
-                    {{-- <li class="nav-item">
-                        <a href="{{ route('admin.student_reports.index') }}"
-                            class="nav-link {{ request()->is('admin/student_reports*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-exclamation-triangle"></i>
-                            <p>Signalements étudiants</p>
+                    <li>
+                        <a href="{{ route('admin.carte') }}">
+                            <i class="fas fa-map-marked-alt"></i> Carte des universités & inspecteurs
                         </a>
-                    </li> --}}
+                    </li>
+
                     <li class="nav-item">
                         <a href="{{ route('admin.system_settings.index') }}"
                             class="nav-link {{ request()->is('admin/system_settings*') ? 'active' : '' }}">
@@ -143,15 +142,59 @@
                     {{-- Autres liens admin... --}}
                 @elseif(Auth::user()->user_type == 2)
                     {{-- Liens spécifiques Inspecteur --}}
+                    {{-- <li class="nav-item">
+                        <a href="{{ route('inspecteur.dashboard') }}"
+                            class="nav-link {{ request()->routeIs('inspecteur.dashboard') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-tachometer-alt"></i>
+                            <p>Tableau de bord</p>
+                        </a>
+                    </li> --}}
+
                     <li class="nav-item">
-                        <a href="{{ url('inspecteur/somepage') }}"
-                            class="nav-link {{ request()->is('inspecteur/somepage*') ? 'active' : '' }}">
-                            <i class="nav-icon fa fa-user"></i>
-                            <p>Inspecteur Page</p>
+                        <a href="{{ route('inspecteur.inspections.calendar') }}"
+                            class="nav-link {{ request()->routeIs('inspecteur.inspections.calendar') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-calendar-alt"></i>
+                            <p>Calendrier des inspections</p>
                         </a>
                     </li>
-                    {{-- Autres liens inspecteur... --}}
+
+                    <li class="nav-item">
+                        <a href="{{ route('inspecteur.inspections.index') }}"
+                            class="nav-link {{ request()->routeIs('inspecteur.inspections.index') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-calendar-check"></i>
+                            <p>Inspections planifiées</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('inspecteur.professeurs.index') }}"
+                            class="nav-link {{ request()->routeIs('inspecteur.professeurs.index') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-users"></i>
+                            <p>Liste des professeurs</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('inspecteur.professeurs.create') }}"
+                            class="nav-link {{ request()->routeIs('inspecteur.professeurs.create') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-user-plus"></i>
+                            <p>Ajouter Professeur/Ouvrier</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('inspecteur.historique.index') }}"
+                            class="nav-link {{ request()->routeIs('inspecteur.historique.index') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-history"></i>
+                            <p>Historique des inspections</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('inspecteur.profil.show') }}"
+                            class="nav-link {{ request()->routeIs('inspecteur.profil.show') ? 'active' : '' }}">
+                            <i class="nav-icon fa fa-user"></i>
+                            <p>Mon profil</p>
+                        </a>
+                    </li>
                 @endif
+
 
             </ul>
 

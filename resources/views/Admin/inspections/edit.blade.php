@@ -2,23 +2,23 @@
 
 @section('content')
     <div class="content-wrapper">
-        <section class="content-header">
-            <h1>{{ isset($inspection) ? 'Modifier' : 'Ajouter' }} une inspection</h1>
-        </section>
-
-        <section class="content">
-            <form
-                action="{{ isset($inspection) ? route('admin.inspections.update', $inspection->id) : route('admin.inspections.store') }}"
-                method="POST">
+        <div class="container-fluid">
+            <h1 class="mb-4">Modifier l'inspection</h1>
+            <form method="POST" action="{{ route('admin.inspections.update', $inspection->id) }}">
                 @csrf
-                @if (isset($inspection))
-                    @method('PUT')
-                @endif
-
+                @method('PUT')
                 @include('admin.inspections.form')
-
-                <button type="submit" class="btn btn-primary">{{ isset($inspection) ? 'Mettre à jour' : 'Ajouter' }}</button>
+                <button type="submit" class="btn btn-success">Mettre à jour</button>
             </form>
-        </section>
+        </div>
     </div>
+@endsection
+
+@section('script')
+    @parent
+    <script>
+        $('#inspectors').select2({
+            placeholder: "Sélectionnez un ou plusieurs inspecteurs"
+        });
+    </script>
 @endsection

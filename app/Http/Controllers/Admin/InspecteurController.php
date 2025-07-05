@@ -19,6 +19,8 @@ class InspecteurController extends Controller
         return view('admin.inspecteur.list', compact('inspecteurs'));
     }
 
+
+
     // Affiche le formulaire d'ajout d'un inspecteur
     public function add()
     {

@@ -10,15 +10,11 @@ class Professor extends Model
         'matricule',
         'name',
         'status',
+        'photo'
     ];
 
     public function universities()
     {
         return $this->belongsToMany(University::class, 'assignments');
     }
-
-    // public function studentReports()
-    // {
-    //     return $this->hasMany(StudentReport::class);
-    // }
 }

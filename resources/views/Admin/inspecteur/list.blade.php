@@ -52,7 +52,7 @@
                                         <th>Status</th>
                                         <th>Email</th>
                                         <th>Créé le</th>
-                                        <th>Localisation</th>
+                                        <th>Dernière position</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -61,7 +61,7 @@
                                         <tr>
                                             <td>{{ $inspecteur->id }}</td>
                                             <td>
-                                                <img src="{{ $inspecteur->profile_picture_url }}"
+                                                <img src="{{ $inspecteur->profile_picture ? asset('storage/' . $inspecteur->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode($inspecteur->name) }}"
                                                     class="rounded-circle border"
                                                     style="width: 48px; height: 48px; object-fit: cover;">
                                             </td>
@@ -73,12 +73,14 @@
                                                 </span>
                                             </td>
                                             <td>{{ $inspecteur->email }}</td>
-                                            <td>{{ $inspecteur->created_at->format('d/m/Y') }}</td>
+                                            <td>{{ $inspecteur->created_at ? $inspecteur->created_at->format('d/m/Y') : '-' }}
+                                            </td>
                                             <td>
-                                                @if ($inspecteur->last_login_latitude)
+                                                @if ($inspecteur->last_login_latitude && $inspecteur->last_login_longitude)
                                                     <button class="btn btn-info btn-sm view-map"
                                                         data-lat="{{ $inspecteur->last_login_latitude }}"
-                                                        data-lng="{{ $inspecteur->last_login_longitude }}">
+                                                        data-lng="{{ $inspecteur->last_login_longitude }}"
+                                                        data-name="{{ $inspecteur->name }}">
                                                         <i class="fas fa-map-marked-alt"></i> Voir carte
                                                     </button>
                                                 @else
@@ -108,8 +110,8 @@
                             <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header border-0">
-                                        <h5 class="modal-title"><i class="fas fa-map-marked-alt"></i> Localisation de la
-                                            dernière connexion</h5>
+                                        <h5 class="modal-title"><i class="fas fa-map-marked-alt"></i> Dernière position de
+                                            connexion</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body p-0">
@@ -137,36 +139,35 @@
 
         $(document).ready(function() {
             $('.view-map').click(function() {
-                const lat = $(this).data('lat');
-                const lng = $(this).data('lng');
+                const lat = $(this).data('lat'); // last_login_latitude
+                const lng = $(this).data('lng'); // last_login_longitude
+                const name = $(this).data('name');
                 $('#mapModal').modal('show');
 
                 setTimeout(function() {
-                    // Détruire la carte précédente si elle existe
                     if (map) {
                         map.remove();
                     }
                     map = L.map('map').setView([lat, lng], 13);
 
-                    // Fond de carte stylé (CartoDB Positron)
-                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                        attribution: '&copy; <a href="https://carto.com/">CARTO</a> contributors'
+                    // OpenStreetMap
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors'
                     }).addTo(map);
 
                     marker = L.marker([lat, lng], {
                             icon: L.icon({
-                                iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+                                iconUrl: 'https://cdn-icons-png.flaticon.com/512/149/149071.png',
                                 iconSize: [38, 38],
                                 iconAnchor: [19, 38],
                                 popupAnchor: [0, -38]
                             })
                         }).addTo(map)
-                        .bindPopup('<b>Dernière connexion ici</b>')
+                        .bindPopup('<b>' + name + '</b><br/>Dernière connexion ici')
                         .openPopup();
-                }, 300); // Laisse le temps au modal de s'afficher
+                }, 300);
             });
 
-            // Nettoyer la carte à la fermeture du modal
             $('#mapModal').on('hidden.bs.modal', function() {
                 if (map) {
                     map.remove();

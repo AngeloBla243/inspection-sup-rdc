@@ -12,6 +12,12 @@ use App\Http\Controllers\Admin\InspectionController;
 use App\Http\Controllers\Admin\UniversityController;
 use App\Http\Controllers\Admin\InspectionReportController;
 use App\Http\Controllers\Admin\SystemSettingsController;
+use App\Http\Controllers\Inspecteur\DashboardInspecteurController;
+use App\Http\Controllers\Inspecteur\InspectionPlanifieeController;
+use App\Http\Controllers\Inspecteur\InspectionEnCoursController;
+use App\Http\Controllers\Inspecteur\ProfesseurController;
+use App\Http\Controllers\Inspecteur\HistoriqueInspectionController;
+use App\Http\Controllers\Inspecteur\ProfilInspecteurController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -58,6 +64,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::resource('universities', UniversityController::class)->names('admin.universities');
     Route::resource('professors', ProfessorController::class)->names('admin.professors');
     Route::resource('inspections', InspectionController::class)->names('admin.inspections');
+    Route::get('/admin/carte', [\App\Http\Controllers\Admin\CarteController::class, 'index'])->name('admin.carte');
     Route::resource('inspection_reports', InspectionReportController::class)->names('admin.inspection_reports');
     Route::get('system_settings', [SystemSettingsController::class, 'index'])->name('admin.system_settings.index');
     Route::post('system_settings', [SystemSettingsController::class, 'update'])->name('admin.system_settings.update');
@@ -66,12 +73,25 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 // Routes inspecteur
 Route::prefix('inspecteur')->middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('inspecteur.dashboard');
-    })->name('inspecteur.dashboard');
+    Route::get('dashboard', [DashboardInspecteurController::class, 'index'])->name('inspecteur.dashboard');
+    Route::get('inspections', [InspectionPlanifieeController::class, 'index'])->name('inspecteur.inspections.index');
+    Route::get('inspections/{id}/form', [InspectionEnCoursController::class, 'show'])->name('inspecteur.inspections.form');
+    Route::post('inspections/{id}/form', [InspectionEnCoursController::class, 'update'])->name('inspecteur.inspections.update');
+    Route::get('professeurs/create', [ProfesseurController::class, 'create'])->name('inspecteur.professeurs.create');
+    Route::get('professeurs', [ProfesseurController::class, 'index'])->name('inspecteur.professeurs.index');
+    Route::post('professeurs', [ProfesseurController::class, 'store'])->name('inspecteur.professeurs.store');
+    Route::get('historique', [HistoriqueInspectionController::class, 'index'])->name('inspecteur.historique.index');
+    Route::get('profil', [ProfilInspecteurController::class, 'show'])->name('inspecteur.profil.show');
+
+    Route::get('inspecteur/calendrier', [InspectionPlanifieeController::class, 'calendar'])->name('inspecteur.inspections.calendar');
+    Route::get('inspecteur/calendrier/events', [InspectionPlanifieeController::class, 'calendarEvents'])->name('inspecteur.inspections.calendar.events');
+
 
     Route::post('/logout', [InspecteurAuthController::class, 'logout'])->name('inspecteur.logout');
 });
+
+
+
 
 
 
